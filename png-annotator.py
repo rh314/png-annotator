@@ -3,6 +3,8 @@ from tkinter import filedialog
 from PIL import Image, ImageTk
 from os.path import expanduser
 from math import floor, ceil
+import argparse
+import os
 
 
 def dialog_open_file():
@@ -108,8 +110,13 @@ class Transform():
 
 
 def main():
-    # fname = dialog_open_file()
-    fname = '/home/rh/delasb/neuralnets/paper1-01.png'
+    if args.filename is None:
+        fname = dialog_open_file()
+    else:
+        fname = args.filename
+    if not os.path.isfile(fname):
+        print('File not found:', fname)
+        exit()
     pil_img0 = Image.open(fname)
     canvas_width = 600
     canvas_height = 400
@@ -140,7 +147,6 @@ def main():
     change_image(pil_sub_img.img)
 
     def update_canvas():
-        print(transform.xysA, transform.xysB)
         pil_sub_img.update_sub_img()
         change_image(pil_sub_img.img)
         for rectangle in rectangles:
@@ -160,27 +166,27 @@ def main():
             if key in '-' and event.state == 0:
                 transform.zoom(0.5)
                 update_canvas()
-                print('zoom out', event)
             elif key in '+=' and event.state in (0, 1):
                 transform.zoom(2)
                 update_canvas()
-                print('zoom in', event.state)
             elif key == '0':
                 transform.xysA[2] = (
                     transform.xysA[0] + transform.xysB[2] - transform.xysB[0])
                 transform.xysA[3] = (
                     transform.xysA[1] + transform.xysB[3] - transform.xysB[1])
                 update_canvas()
-                print('reset zoom')
             elif key == 'z' and len(rectangles) > 0:
                 rectangles[-1].delete()
                 rectangles.pop()
             elif key == 's':
-                for r in rectangles:
-                    print(r.x0A, r.y0A, r.x1A, r.y1A)
-            elif key == 'p':
-                import pdb
-                pdb.set_trace()
+                fname_coords = fname.replace('.png', '.txt')
+                assert fname != fname_coords
+                with open(fname_coords, 'w') as f:
+                    for r in rectangles:
+                        print(
+                            f'{r.x0A}, {r.y0A}, {r.x1A}, {r.y1A}',
+                            file=f)
+                    print('Saved coordinates to file:', fname_coords)
         else:
             delta = 10
             if event.state == 1:
@@ -199,7 +205,6 @@ def main():
                 update_canvas()
             elif keysym == 'Escape':
                 root.after(0, lambda: root.destroy())
-        # print(repr(event), canvas.coords(img_id))
 
     root.bind("<Key>", keyboard)
 
@@ -241,4 +246,7 @@ def main():
     mainloop()
 
 
+args = argparse.ArgumentParser(description='PNG Annotator GUI')
+args.add_argument('filename', nargs='?', default=None)
+args = args.parse_args()
 main()
