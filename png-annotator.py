@@ -43,7 +43,7 @@ class Rectangle():
         self.x0A, self.y0A = coords[:2]
         self.x1A, self.y1A = coords[2:]
         x0B, y0B, x1B, y1B = self.canvas_coords()
-        self.id2 = canvas.create_rectangle((x0B, y0B, x1B, y1B))
+        self.id2 = canvas.create_rectangle((x0B, y0B, x1B, y1B), outline='red')
 
     def canvas_coords(self):
         transform = self.transform
