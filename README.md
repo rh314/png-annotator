@@ -36,7 +36,7 @@ _Note: Python version must be >= 3.6_
 
 ### Running
 
-python your_image.png
+`python your_image.png`
 
 ### Interacting
 
@@ -46,7 +46,7 @@ python your_image.png
 * Press `s` to save the currently drawn rectangles.
 * Use `z` to remove the most-recently-drawn rectangle.
 
-_PS: There is no "undo" action_
+_PS: There is no "undo" action._
 
 # License
 
