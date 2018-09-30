@@ -36,7 +36,7 @@ _Note: Python version must be >= 3.6_
 
 ### Running
 
-`python your_image.png`
+`python png-annotator.py your_image.png`
 
 ### Interacting
 
